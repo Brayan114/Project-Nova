@@ -1,0 +1,16 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: nova-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: nova
+      POSTGRES_PASSWORD: nova_password
+      POSTGRES_DB: nova_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - nova-db-data:/var/lib/postgresql/data
+
+volumes:
+  nova-db-data:

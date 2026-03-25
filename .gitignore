@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
+
+# sqlite (legacy)
+prisma/dev.db
+prisma/dev.db-journal
+
+# whatsapp session
+.wwebjs_auth/
+.wwebjs_cache/
+.whatsapp_status.json
+
+# docker
+docker-compose.override.yml
+
+# temp
+prisma_out.txt
