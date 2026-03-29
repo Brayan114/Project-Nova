@@ -54,5 +54,14 @@ prisma/dev.db-journal
 # docker
 docker-compose.override.yml
 
-# temp
-prisma_out.txt
+# NOVA workspace data
+/nova_workspace/
+
+# debug and test scripts
+test_*.js
+check_*.js
+debug_*.js
+list_*.js
+*.txt
+*.webp
+*.png
