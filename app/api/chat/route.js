@@ -10,6 +10,7 @@ import { emotionToFace } from '@/lib/face/face-mapper';
 import { generateResponse } from '@/lib/llm/provider';
 import { buildPrompt } from '@/lib/llm/prompt-builder';
 import { performWebSearch } from '@/lib/engine/search';
+import { executeLocalCommand } from '@/lib/clients/system';
 
 export async function POST(request) {
     try {
@@ -96,7 +97,17 @@ export async function POST(request) {
                     const searchContext = `\n\n[SYSTEM WORKER]: You autonomously searched the live web for "${args.query}". The live results are:\n\n${searchResults}\n\nReview this data and incorporate it naturally into your response to the user. Do not say "Based on the search results..." just seamlessly state the facts like you knew them.`;
 
                     const enrichedPrompt = systemPrompt + searchContext;
-                    llmResult = await generateResponse(enrichedPrompt, message);
+                    llmResult = await generateResponse(enrichedPrompt, message, [], true);
+                    response = llmResult.content || '';
+                } else if (call.function.name === 'execute_system_command') {
+                    // Local OS Control
+                    const sysResult = await executeLocalCommand(args.command);
+                    console.log(`[NOVA SYSTEM] Tool Execution Result:`, sysResult);
+                    
+                    const systemContext = `\n\n[SYSTEM STATUS: Action Performed] You successfully executed the command: "${args.command}" on the host machine. If there was an error, it was: "${sysResult.message}". Inform the user in your signature sarcastic style that you've done what they asked (or failed if necessary).`;
+                    
+                    const sysPrompt = systemPrompt + systemContext;
+                    llmResult = await generateResponse(sysPrompt, message, [], true);
                     response = llmResult.content || '';
                 }
             } catch (e) {
