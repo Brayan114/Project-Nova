@@ -65,6 +65,7 @@ model SemanticMemory {
   user           User                        @relation(fields: [userId], references: [id])
   fact           String
   relevanceScore Float                       @default(0.5)
+  tags           String                      @default("[]")
   embedding       Unsupported("vector(768)")?
 }
 
